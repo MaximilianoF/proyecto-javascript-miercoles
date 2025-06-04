@@ -30,13 +30,14 @@ function deleteEstudiante(student,row){
   if(index > -1){
     students.splice(index, 1);
     row.remove();
-    calcularPromedio();
+    updateAverage();
   }
 }
 
  function updateAverage() {
     if (students.length === 0) {
         document.getElementById("averageText").textContent = "Promedio de calificaciones: 0";
+        updateStatistics();
         return;
     }
 
@@ -44,6 +45,7 @@ function deleteEstudiante(student,row){
     const average = (total / students.length).toFixed(2);
 
     document.getElementById("averageText").textContent = "Promedio de calificaciones: " + average;
+    updateStatistics();
 }
 
 document.getElementById("studentForm").addEventListener("submit", function (e) {
@@ -54,9 +56,9 @@ document.getElementById("studentForm").addEventListener("submit", function (e) {
   const grade = parseFloat(document.getElementById("grade").value);
 
   document.getElementById("nameError").textContent = "";
-   document.getElementById("lastNameError").textContent = "";
-   document.getElementById("gradeError").textContent = "";
-
+  document.getElementById("lastNameError").textContent = "";
+  document.getElementById("gradeError").textContent = "";
+  
   let hasError = false;
 
   if (!name) {
@@ -89,6 +91,10 @@ document.getElementById("studentForm").addEventListener("submit", function (e) {
     this.reset();
 });
 
+const nameInput = document.getElementById("name");
+const lastNameInput = document.getElementById("lastName");
+const gradeInput = document.getElementById("grade");
+
 function editarEstudiante(student, row) {
     nameInput.value = student.name;
     lastNameInput.value = student.lastName;
@@ -98,9 +104,15 @@ function editarEstudiante(student, row) {
         students.splice(index, 1);
     }
     row.remove();
-    calcularPromedio();
+    updateAverage();
 }
 
-  const nameInput = document.getElementById("name");
-  const lastNameInput = document.getElementById("lastName");
-  const gradeInput = document.getElementById("grade");
+  function updateStatistics(){
+    const total = students.length;
+    const exam = students.filter(student => student.grade < 5).length;
+    const exempt = students.filter(student => student.grade > 5).length;
+
+    document.getElementById("totalStudents").textContent = "Total de estudiantes: " + total;
+    document.getElementById("studentsExam").textContent = "Deben rendir examen (nota < 5.0): " + exam;
+    document.getElementById("studentsExempt").textContent = "Eximidos (nota > 5.0): " + exempt;
+}
