@@ -8,12 +8,18 @@
    <td>${student.name}</td>
     <td>${student.lastName}</td>
      <td>${student.grade}</td>
-     <td><button class="delete"> Eliminar</button></td>
+     <td>
+     <button class="delete"> Eliminar</button> <button class="edit">Editar</button>
+     </td>
    `;
 
   row.querySelector(".delete").addEventListener("click", function(){
     deleteEstudiante(student,row);
   });
+
+  row.querySelector(".edit").addEventListener("click", function () {
+    editarEstudiante(student, row);
+});
 
 
 tableBody.appendChild(row)
@@ -82,3 +88,19 @@ document.getElementById("studentForm").addEventListener("submit", function (e) {
     updateAverage();
     this.reset();
 });
+
+function editarEstudiante(student, row) {
+    nameInput.value = student.name;
+    lastNameInput.value = student.lastName;
+    gradeInput.value = student.grade;
+    const index = students.indexOf(student);
+    if (index > -1) {
+        students.splice(index, 1);
+    }
+    row.remove();
+    calcularPromedio();
+}
+
+  const nameInput = document.getElementById("name");
+  const lastNameInput = document.getElementById("lastName");
+  const gradeInput = document.getElementById("grade");
